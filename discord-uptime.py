@@ -46,7 +46,8 @@ async def monitor_uptime():
                     await channel.send(embed=embed)
                     currently_down.remove(i["address"])
                 else:
-                    await channel.send('Received response from {0} in: '.format(i['address']) + str(int(ping(i['address'], unit='ms'))) + 'ms')
+                    if config['always_notify'] is True:
+                        await channel.send('Received response from {0} in: '.format(i['address']) + str(int(ping(i['address'], unit='ms'))) + 'ms')
         await asyncio.sleep(config['secs_between_ping'])
 
 
