@@ -4,9 +4,8 @@ import discord
 import asyncio
 import json
 
-
 bot = commands.Bot(command_prefix='>', description='Bot to monitor uptime of services')
-
+currently_down = []
 
 with open('servers.json') as f:
     servers = json.load(f)
@@ -29,6 +28,8 @@ async def monitor_uptime():
     while not bot.is_closed():
         for i in servers:
             if ping(i["address"]) is None:
+                if not i["address"] in currently_down:
+                    currently_down.append(i["address"])
                 embed = discord.Embed(
                     title='**{0} is down!**'.format(i['name']),
                     description='Error pinging {0} <@&{1}>'.format(i['address'], config['role_to_mention']),
@@ -36,7 +37,16 @@ async def monitor_uptime():
                 )
                 await channel.send(embed=embed)
             else:
-                await channel.send('Received response from {0} in: '.format(i['address']) + str(int(ping(i['address'], unit='ms'))) + 'ms')
+                if i["address"] in currently_down:
+                    embed = discord.Embed(
+                        title='**{0} is now up!**'.format(i['name']),
+                        description='Successfully pinged {0} <@&{1}>'.format(i['address'], config['role_to_mention']),
+                        color=discord.Color.green()
+                    )
+                    await channel.send(embed=embed)
+                    currently_down.remove(i["address"])
+                else:
+                    await channel.send('Received response from {0} in: '.format(i['address']) + str(int(ping(i['address'], unit='ms'))) + 'ms')
         await asyncio.sleep(config['secs_between_ping'])
 
 
