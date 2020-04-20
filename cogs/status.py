@@ -13,7 +13,7 @@ class Status(commands.Cog):
     async def status(self, ctx):
         """
         :param ctx:
-        :return: Embed of currently down servers
+        :return: Embed of the status of each server
         """
         embed = discord.Embed(title="**Monitor Status**")
 

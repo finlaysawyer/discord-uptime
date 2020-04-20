@@ -14,11 +14,16 @@ class Ping(commands.Cog):
         :param ctx:
         :param address: Address to ping
         :param pings: Number of pings
-        :return: Delay in milliseconds
+        :return: Delay in milliseconds or error
         """
-        for i in range(pings):
-            await ctx.send(f"Received response from {address} in: {str(int(ping(address, unit='ms')))}ms.")
-            await asyncio.sleep(1)
+        if ping(address) is False:
+            await ctx.send(f"Could not ping {address} - unknown host.")
+        elif ping(address) is None:
+            await ctx.send(f"Could not ping {address} - timed out.")
+        else:
+            for i in range(pings):
+                await ctx.send(f"Received response from {address} in: {str(int(ping(address, unit='ms')))}ms.")
+                await asyncio.sleep(1)
 
 
 def setup(bot):
