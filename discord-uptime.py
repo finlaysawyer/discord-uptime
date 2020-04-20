@@ -17,8 +17,6 @@ with open('config.json') as f:
 @bot.event
 async def on_ready():
     print('Logged in as {0}'.format(bot.user))
-    print('---------------------------------')
-    await bot.change_presence(activity=discord.Game('{0} guilds'.format(len(list(bot.guilds)))))
 
 
 async def monitor_uptime():
@@ -57,17 +55,6 @@ async def on_command_error(ctx, error):
         return await ctx.send(error)
     else:
         return
-
-
-@bot.command()
-async def joined(ctx, member: discord.Member):
-    """
-    :param ctx: Context
-    :param member: Discord tag
-    :return: Date when a member joined
-    """
-    await ctx.send('{0.name} joined in {0.joined_at}'.format(member))
-
 
 @bot.command()
 async def status(ctx, address: str):
