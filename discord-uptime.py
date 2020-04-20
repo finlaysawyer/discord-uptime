@@ -2,7 +2,7 @@ from discord.ext import commands
 from utils import config as cfg
 import os
 
-bot = commands.Bot(command_prefix='>', description='Bot to monitor uptime of services')
+bot = commands.Bot(command_prefix=cfg.config['prefix'], description='Bot to monitor uptime of services')
 
 
 @bot.event

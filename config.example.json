@@ -2,5 +2,6 @@
   "token": "",
   "notification_channel": 1234,
   "role_to_mention": 1234,
-  "secs_between_ping": 30
+  "secs_between_ping": 30,
+  "prefix": ">"
 }
