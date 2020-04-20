@@ -1,5 +1,4 @@
-bot_cfg.py
-
+config.json
 __pycache__/
 venv/
 .idea/
