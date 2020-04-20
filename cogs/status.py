@@ -1,6 +1,7 @@
 from discord.ext import commands
-from ping3 import ping
-import asyncio
+import discord
+from cogs import monitor
+from utils import config as cfg
 
 
 class Status(commands.Cog):
@@ -8,17 +9,21 @@ class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="Pings an address - status <address> [pings]")
-    async def status(self, ctx, address: str, pings: int = 1):
+    @commands.command(brief="Checks status of servers - status")
+    async def status(self, ctx):
         """
         :param ctx:
-        :param address: Address to ping
-        :param pings: Number of pings
-        :return: Delay in milliseconds
+        :return: Embed of currently down servers
         """
-        for i in range(pings):
-            await ctx.send(f"Received response from {address} in: {str(int(ping(address, unit='ms')))}ms.")
-            await asyncio.sleep(1)
+        embed = discord.Embed(title="**Monitor Status**")
+
+        for i in cfg.servers:
+            if i['address'] in monitor.currently_down:
+                embed.add_field(name=i['name'], value=f"**:red_circle: {i['address']}**", inline=False)
+            else:
+                embed.add_field(name=i['name'], value=f"**:green_circle: {i['address']}**", inline=False)
+
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

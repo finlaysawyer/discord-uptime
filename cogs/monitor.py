@@ -10,8 +10,8 @@ async def notify_down(name, address, channel, reason):
     if address not in currently_down:
         currently_down.append(address)
         embed = discord.Embed(
-            title=f"**{name} is down!**",
-            color=discord.Color.red()
+            title=f"**:red_circle:  {name} is down!**",
+            color=16711680
         )
         embed.add_field(name="Address", value=address, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
@@ -22,8 +22,8 @@ async def notify_down(name, address, channel, reason):
 async def notify_up(name, address, channel):
     if address in currently_down:
         embed = discord.Embed(
-            title=f"**{name} is up!**",
-            color=discord.Color.green()
+            title=f"**:green_circle:  {name} is up!**",
+            color=65287
         )
         embed.add_field(name="Address", value=address, inline=False)
         await channel.send(embed=embed)

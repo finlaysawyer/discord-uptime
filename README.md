@@ -23,4 +23,5 @@ To add more servers to ping, simply add a new object and specify the `name` and 
 ## Commands
 > Default Prefix: >
 
-`status <address> [pings]` - Pings an address once, or for the amount specified via pings
+* `ping <address> [pings]` - Pings an address once, or for the amount specified via pings
+* `status` - Displays the status of all servers
