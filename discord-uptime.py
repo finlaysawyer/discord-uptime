@@ -45,7 +45,8 @@ async def monitor_uptime():
                     currently_down.remove(i["address"])
                 else:
                     if config['always_notify'] is True:
-                        await channel.send('Received response from {0} in: '.format(i['address']) + str(int(ping(i['address'], unit='ms'))) + 'ms')
+                        await channel.send('Received response from {0} in: '.format(i['address']) + str(
+                            int(ping(i['address'], unit='ms'))) + 'ms')
         await asyncio.sleep(config['secs_between_ping'])
 
 
@@ -56,27 +57,17 @@ async def on_command_error(ctx, error):
     else:
         return
 
-@bot.command()
-async def status(ctx, address: str):
-    """
-    :param ctx: Context
-    :param address: Address to ping
-    :return: Delay in milliseconds
-    """
-    await ctx.send('Received response from {0} in: '.format(address) + str(int(ping(address, unit='ms'))) + 'ms')
 
-
-@bot.command()
-async def status_multi(ctx, address: str, pings: int):
+@bot.command(brief="Pings an address - status <address> [pings]")
+async def status(ctx, address: str, pings: int = 1):
     """
-    :param ctx: Context
+    :param ctx:
     :param address: Address to ping
     :param pings: Number of pings
-    :return: Delay in milliseconds for amount of pings specified
+    :return: Delay in milliseconds
     """
-    await ctx.send('Pinging {0} {1} times'.format(address, pings))
-    for num in range(pings):
-        await ctx.send('Received response from {0} in: '.format(address) + str(int(ping(address, unit='ms'))) + 'ms')
+    for i in range(pings):
+        await ctx.send(f"Received response from {address} in: {str(int(ping(address, unit='ms')))}ms.")
         await asyncio.sleep(1)
 
 bot.loop.create_task(monitor_uptime())
