@@ -25,3 +25,11 @@ To add more servers to ping, simply add a new object and specify the `name` and 
 
 * `ping <address> [pings]` - Pings an address once, or for the amount specified via pings
 * `status` - Displays the status of all servers
+
+## Screenshots
+> Status Command
+
+![status](https://i.gyazo.com/7a7a72ecea79b38410ca114fe8719952.png)
+> Uptime & Downtime Notifications
+
+![uptime](https://i.gyazo.com/92a3d1e8119751fd7f128606d246911c.png)
