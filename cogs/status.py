@@ -15,7 +15,7 @@ class Status(commands.Cog):
         :param ctx:
         :return: Embed of the status of each server
         """
-        embed = discord.Embed(title="**Monitor Status**")
+        embed = discord.Embed(title="**Monitor Status**", color=16711680 if monitor.currently_down else 65287)
 
         for i in cfg.servers:
             if i['address'] in monitor.currently_down:
