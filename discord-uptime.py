@@ -2,23 +2,28 @@ from discord.ext import commands
 from utils import config as cfg
 import os
 
-bot = commands.Bot(command_prefix=cfg.config['prefix'], description='Bot to monitor uptime of services')
+bot = commands.Bot(command_prefix=cfg.config['prefix'])
 
 
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}")
+class DiscordUptime(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix=cfg.config['prefix'],
+                         description='Bot to monitor uptime of services',
+                         reconnect=True)
+        self.bot = bot
+
+    async def on_ready(self):
+        print(f"Logged in as {self.user}")
+
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                self.load_extension(f'cogs.{filename[:-3]}')
+
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, (commands.CommandNotFound, commands.BadArgument, commands.MissingRequiredArgument)):
+            return await ctx.send(error)
+        else:
+            return
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, (commands.CommandNotFound, commands.BadArgument, commands.MissingRequiredArgument)):
-        return await ctx.send(error)
-    else:
-        return
-
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
-
-bot.run(cfg.config['token'])
+DiscordUptime().run(cfg.config["token"])
