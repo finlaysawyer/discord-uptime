@@ -1,14 +1,17 @@
+from datetime import timedelta
+
+import discord
 from discord.ext import tasks, commands
 from ping3 import ping
-from utils import config as cfg
-import discord
 
-currently_down = []
+from utils import config as cfg
+
+currently_down = {}
 
 
 async def notify_down(name, address, channel, reason):
     if address not in currently_down:
-        currently_down.append(address)
+        currently_down.update({address: 0})
         embed = discord.Embed(
             title=f"**:red_circle:  {name} is down!**",
             color=16711680
@@ -17,6 +20,8 @@ async def notify_down(name, address, channel, reason):
         embed.add_field(name="Reason", value=reason, inline=False)
         await channel.send(embed=embed)
         await channel.send(f"<@&{cfg.config['role_to_mention']}>", delete_after=3)
+    else:
+        currently_down[address] = currently_down.get(address, 0) + cfg.config['secs_between_ping']
 
 
 async def notify_up(name, address, channel):
@@ -26,9 +31,10 @@ async def notify_up(name, address, channel):
             color=65287
         )
         embed.add_field(name="Address", value=address, inline=False)
+        embed.add_field(name="Downtime", value=str(timedelta(seconds=currently_down[address])), inline=False)
         await channel.send(embed=embed)
         await channel.send(f"<@&{cfg.config['role_to_mention']}>", delete_after=3)
-        currently_down.remove(address)
+        currently_down.pop(address)
 
 
 class Monitor(commands.Cog):

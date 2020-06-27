@@ -1,5 +1,8 @@
-from discord.ext import commands
+from datetime import timedelta
+
 import discord
+from discord.ext import commands
+
 from cogs import monitor
 from utils import config as cfg
 
@@ -19,9 +22,10 @@ class Status(commands.Cog):
 
         for i in cfg.servers:
             if i['address'] in monitor.currently_down:
-                embed.add_field(name=i['name'], value=f"**:red_circle: {i['address']}**", inline=False)
+                downtime = str(timedelta(seconds=monitor.currently_down[i['address']]))
+                embed.add_field(name=i['name'], value=f":red_circle: {i['address']} ({downtime})", inline=False)
             else:
-                embed.add_field(name=i['name'], value=f"**:green_circle: {i['address']}**", inline=False)
+                embed.add_field(name=i['name'], value=f":green_circle: {i['address']}", inline=False)
 
         await ctx.send(embed=embed)
 

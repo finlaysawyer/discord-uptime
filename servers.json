@@ -4,7 +4,7 @@
       "address": "google.com"
     },
     {
-      "name": "Google 2",
-      "address": "google.commm"
+      "name": "Invalid",
+      "address": "idont.exist"
     }
 ]

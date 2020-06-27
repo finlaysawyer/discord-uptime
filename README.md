@@ -29,7 +29,7 @@ To add more servers to ping, simply add a new object and specify the `name` and 
 ## Screenshots
 > Status Command
 
-![status](https://i.gyazo.com/7a7a72ecea79b38410ca114fe8719952.png)
+![status](https://i.gyazo.com/493df5abce9b54aa51f8870cad7260a4.png)
 > Uptime & Downtime Notifications
 
-![uptime](https://i.gyazo.com/92a3d1e8119751fd7f128606d246911c.png)
+![uptime](https://i.gyazo.com/d69fdebe3a2e0acc82f4be52a12c2b5c.png)
