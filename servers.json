@@ -4,6 +4,10 @@
       "address": "google.com"
     },
     {
+      "name": "Cloudflare",
+      "address": "1.1.1.1"
+    },
+    {
       "name": "Invalid",
       "address": "idont.exist"
     }
