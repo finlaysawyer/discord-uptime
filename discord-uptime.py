@@ -1,3 +1,4 @@
+from discord import Intents
 from discord.ext import commands
 from utils import config as cfg
 import os
@@ -9,7 +10,8 @@ class DiscordUptime(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=cfg.config['prefix'],
                          description='Bot to monitor uptime of services',
-                         reconnect=True)
+                         reconnect=True,
+                         intents=Intents.default())
         self.bot = bot
 
     async def on_ready(self):
