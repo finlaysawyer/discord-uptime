@@ -71,7 +71,7 @@ class Monitor(commands.Cog):
         channel = self.bot.get_channel(get_config("notification_channel"))
 
         for i in get_servers():
-            if i["type"] is "ping":
+            if i["type"] == "ping":
                 if ping(i["address"]) is False:
                     await self.notify_down(i, channel, "Host unknown")
                 elif ping(i["address"]) is None:

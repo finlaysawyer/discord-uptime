@@ -27,7 +27,8 @@ class Ping(commands.Cog):
         else:
             for i in range(pings):
                 await ctx.send(
-                    f"Received response from {address} in: {str(int(ping(address, unit='ms')))}ms."
+                    f"Received response from {address} in: "
+                    f"{str(int(ping(address, unit='ms')))}ms."
                 )
                 await asyncio.sleep(1)
 
