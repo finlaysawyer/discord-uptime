@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2021-01-10
+
+### Changed
+- Updated the default config to reflect new `http_timeout` option
+
 ## [1.0.0] - 2021-01-10
 
 ### Added
@@ -18,3 +23,4 @@
 - Main file renamed to `bot.py`
 
 [1.0.0]: https://github.com/finlaysawyer/discord-uptime/compare/v0.0.1...v1.0.0
+[1.0.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.0...v1.0.1
