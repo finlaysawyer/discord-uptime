@@ -4,6 +4,8 @@ import aiohttp
 from discord.ext import commands
 from ping3 import ping
 
+from utils.config import get_config
+
 
 class Ping(commands.Cog):
     def __init__(self, bot):
@@ -37,12 +39,23 @@ class Ping(commands.Cog):
         :param address: Address to make request to
         :return: HTTP status code
         """
-        if not address.startswith('http'):
-            address = f'http://{address}'
+        if not address.startswith("http"):
+            address = f"http://{address}"
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(address) as res:
-                await ctx.send(f"Recieved response code: {res.status} ({res.reason})")
+        timeout = get_config("http_timeout")
+
+        async with aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=timeout)
+        ) as session:
+            try:
+                async with session.get(address) as res:
+                    await ctx.send(
+                        f"Recieved response code: {res.status} ({res.reason})"
+                    )
+            except asyncio.TimeoutError:
+                await ctx.send(f"Request timed out after {timeout} seconds")
+            except aiohttp.ClientError:
+                await ctx.send(f"Could not establish a connection to {address}")
 
 
 def setup(bot):

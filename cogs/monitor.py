@@ -1,5 +1,7 @@
+import asyncio
 from datetime import timedelta
 
+import aiohttp
 import discord
 from discord.ext import tasks, commands
 from ping3 import ping
@@ -17,51 +19,49 @@ class Monitor(commands.Cog):
         self.monitor_uptime.cancel()
 
     async def notify_down(
-        self, name: str, address: str, channel: discord.TextChannel, reason: str
+        self, server: object, channel: discord.TextChannel, reason: str
     ) -> None:
         """
         Sends an embed to indicate a service is offline
-        :param name: User-friendly name of the service
-        :param address: Address of the service
+        :param server: Server object to extract data from
         :param channel: Channel to send the notification to
         :param reason: Reason why the service is down
         """
-        if address not in self.currently_down:
-            self.currently_down.update({address: 0})
+        if server["address"] not in self.currently_down:
+            self.currently_down.update({server["address"]: 0})
             embed = discord.Embed(
-                title=f"**:red_circle:  {name} is down!**", color=16711680
+                title=f"**:red_circle:  {server['address']} is down!**", color=16711680
             )
-            embed.add_field(name="Address", value=address, inline=False)
+            embed.add_field(name="Address", value=server["address"], inline=False)
+            embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
             await channel.send(embed=embed)
             await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
         else:
-            self.currently_down[address] = self.currently_down.get(
-                address, 0
+            self.currently_down[server["address"]] = self.currently_down.get(
+                server["address"], 0
             ) + get_config("secs_between_ping")
 
-    async def notify_up(
-        self, name: str, address: str, channel: discord.TextChannel
-    ) -> None:
+    async def notify_up(self, server: object, channel: discord.TextChannel) -> None:
         """
         Sends an embed to indicate a service is online
-        :param name: User-friendly name of the service
-        :param address: Address of the service
+        :param server: Server object to extract data from
         :param channel: Channel to send the notification to
         """
-        if address in self.currently_down:
+        if server["address"] in self.currently_down:
             embed = discord.Embed(
-                title=f"**:green_circle:  {name} is up!**", color=65287
+                title=f"**:green_circle:  {server['name']} is up!**", color=65287
             )
-            embed.add_field(name="Address", value=address, inline=False)
+            embed.add_field(name="Address", value=server["address"], inline=False)
+            embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(
                 name="Downtime",
-                value=str(timedelta(seconds=self.currently_down[address])),
+                value=str(timedelta(seconds=self.currently_down[server["address"]])),
                 inline=False,
             )
             await channel.send(embed=embed)
             await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
-            self.currently_down.pop(address)
+            self.currently_down.pop(server["address"])
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
     async def monitor_uptime(self) -> None:
@@ -71,12 +71,33 @@ class Monitor(commands.Cog):
         channel = self.bot.get_channel(get_config("notification_channel"))
 
         for i in get_servers():
-            if ping(i["address"]) is False:
-                await self.notify_down(i["name"], i["address"], channel, "Host unknown")
-            elif ping(i["address"]) is None:
-                await self.notify_down(i["name"], i["address"], channel, "Timed out")
+            if i["type"] is "ping":
+                if ping(i["address"]) is False:
+                    await self.notify_down(i, channel, "Host unknown")
+                elif ping(i["address"]) is None:
+                    await self.notify_down(i, channel, "Timed out")
+                else:
+                    await self.notify_up(i, channel)
             else:
-                await self.notify_up(i["name"], i["address"], channel)
+                address = i["address"]
+                timeout = get_config("http_timeout")
+
+                if not address.startswith("http"):
+                    address = f"http://{address}"
+
+                async with aiohttp.ClientSession(
+                    timeout=aiohttp.ClientTimeout(total=timeout)
+                ) as session:
+                    try:
+                        async with session.get(address) as res:
+                            if res.ok:
+                                await self.notify_up(i, channel)
+                            else:
+                                await self.notify_down(i, channel, res.reason)
+                    except asyncio.TimeoutError:
+                        await self.notify_down(i, channel, "Timed out")
+                    except aiohttp.ClientError:
+                        await self.notify_down(i, channel, "Connection failed")
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
@@ -89,13 +110,15 @@ class Monitor(commands.Cog):
             if i["address"] in self.currently_down:
                 downtime = str(timedelta(seconds=self.currently_down[i["address"]]))
                 embed.add_field(
-                    name=i["name"],
+                    name=f"{i['name']} ({i['type']})",
                     value=f":red_circle: {i['address']} ({downtime})",
                     inline=False,
                 )
             else:
                 embed.add_field(
-                    name=i["name"], value=f":green_circle: {i['address']}", inline=False
+                    name=f"{i['name']} ({i['type']})",
+                    value=f":green_circle: {i['address']}",
+                    inline=False,
                 )
 
         await ctx.send(embed=embed)

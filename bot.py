@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 
 from discord import Intents
 from discord.ext import commands
@@ -6,6 +8,11 @@ from discord.ext import commands
 from utils.config import get_config
 
 bot = commands.Bot(command_prefix=get_config("prefix"))
+logging.basicConfig(
+    format="%(levelname)s | %(asctime)s | %(name)s | %(message)s",
+    stream=sys.stdout,
+    level=logging.INFO,
+)
 
 
 class DiscordUptime(commands.Bot):
