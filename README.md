@@ -1,7 +1,8 @@
 # discord-uptime
-Discord bot to monitor uptime and ping addresses
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Built using discord.py 1.6.x, ping3 and aiohttp
+Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping and http requests. 
+There are also commands avaliable to make manual requests. Built using discord.py 1.6.x, ping3 and aiohttp
 
 ## Installation
 **Requires Python 3.6+**
