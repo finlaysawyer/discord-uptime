@@ -1,7 +1,14 @@
 import json
+from typing import Iterable, Union
 
-with open('servers.json') as f:
-    servers = json.load(f)
 
-with open('config.json') as f:
-    config = json.load(f)
+def get_servers() -> Iterable:
+    """Reads all specified servers specified in servers.json."""
+    with open('servers.json') as f:
+        return json.load(f)
+
+
+def get_config(item: str) -> Union[str, int]:
+    """Retrieves the configuration value specified."""
+    with open('config.json') as f:
+        return json.load(f)[item]
