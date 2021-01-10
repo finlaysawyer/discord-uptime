@@ -1,14 +1,22 @@
 [
     {
       "name": "Google",
+      "type": "http",
       "address": "google.com"
     },
     {
       "name": "Cloudflare",
+      "type": "ping",
       "address": "1.1.1.1"
     },
     {
-      "name": "Invalid",
+      "name": "Invalid ping",
+      "type": "ping",
       "address": "idont.exist"
+    },
+    {
+      "name": "Invalid http",
+      "type": "http",
+      "address": "ialsodont.exist"
     }
 ]
