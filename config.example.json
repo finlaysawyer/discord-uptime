@@ -1,7 +1,8 @@
 {
   "token": "",
+  "prefix": ">",
   "notification_channel": 1234,
   "role_to_mention": 1234,
   "secs_between_ping": 30,
-  "prefix": ">"
+  "http_timeout": 5
 }
