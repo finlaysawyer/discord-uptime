@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.2] - 2021-02-19
+## [1.1.0] - 2021-02-19
 
 ### Added
 - Bandit for security linting
@@ -37,4 +37,4 @@
 
 [1.0.0]: https://github.com/finlaysawyer/discord-uptime/compare/v0.0.1...v1.0.0
 [1.0.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.0...v1.0.1
-[1.0.2]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.0.2
+[1.1.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.1.0
