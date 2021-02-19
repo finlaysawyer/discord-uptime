@@ -20,3 +20,15 @@ exclude = '''
   | foo.py
 )
 '''
+
+[tool.pylint]
+    [tool.pylint.master]
+    max-line-length = 88
+    disable = '''
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    arguments-differ,
+    no-member,
+    duplicate-code,
+    '''

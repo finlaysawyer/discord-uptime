@@ -25,7 +25,7 @@ class Ping(commands.Cog):
         elif ping(address) is None:
             await ctx.send(f"Could not ping {address} - timed out.")
         else:
-            for i in range(pings):
+            for _ in range(pings):
                 await ctx.send(
                     f"Received response from {address} in: "
                     f"{str(int(ping(address, unit='ms')))}ms."

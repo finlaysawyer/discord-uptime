@@ -1,6 +1,9 @@
 {
   "token": "",
   "prefix": ">",
+  "activity_type": "watching",
+  "activity_name": "services",
+  "disable_help": "false",
   "notification_channel": 1234,
   "role_to_mention": 1234,
   "secs_between_ping": 30,

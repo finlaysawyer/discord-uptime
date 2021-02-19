@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0] - 2021-02-19
+
+### Added
+- Bandit for security linting
+- User-friendly errors when a config is formatted incorrectly or missing values
+- Configurable bot status in `config.json`:
+  - `activity_type` - one of `playing, streaming, listening, watching`
+  - `activity_name` - any string
+- Default help command can now be disabled by setting `disable_help` to 'true'
+
+### Changed
+- Replaced flake8 with pylint and did some minor refactoring
+
 ## [1.0.1] - 2021-01-10
 
 ### Changed
@@ -24,3 +37,4 @@
 
 [1.0.0]: https://github.com/finlaysawyer/discord-uptime/compare/v0.0.1...v1.0.0
 [1.0.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.0...v1.0.1
+[1.1.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.1.0
