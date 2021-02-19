@@ -25,14 +25,14 @@ jobs:
       - name: Install Python dependencies
         run: pip install pylint black bandit
 
-      - name: Lint :: Run pylint
+      - name: Lint - Run pylint
         run: |
           pylint bot.py
           pylint cogs
           pylint utils
 
-      - name: Lint :: Run black
+      - name: Lint - Run black
         run: black --verbose --check --diff .
 
-      - name: Lint :: Run bandit
+      - name: Lint - Run bandit
       - run: bandit -r .
