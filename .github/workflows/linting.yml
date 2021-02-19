@@ -22,8 +22,11 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Install Python dependencies
+      - name: Install Python tools
         run: pip install pylint black bandit
+        
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
 
       - name: Run pylint
         run: |
