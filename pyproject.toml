@@ -30,4 +30,5 @@ exclude = '''
     missing-function-docstring,
     arguments-differ,
     no-member,
+    duplicate-code,
     '''
