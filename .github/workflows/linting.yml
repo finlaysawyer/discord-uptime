@@ -23,12 +23,16 @@ jobs:
           python-version: 3.7
 
       - name: Install Python dependencies
-        run: pip install black flake8
+        run: pip install pylint black bandit
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          black: true
-          flake8: true
-          auto_fix: true
+      - name: Lint :: Run pylint
+        run: |
+          pylint bot.py
+          pylint cogs
+          pylint utils
+
+      - name: Lint :: Run black
+        run: black --verbose --check --diff .
+
+      - name: Lint :: Run bandit
+      - run: bandit -r .

@@ -1,5 +1,6 @@
 # discord-uptime
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping and http requests. 
 There are also commands avaliable to make manual requests. Built using discord.py 1.6.x, ping3 and aiohttp
@@ -14,6 +15,9 @@ Install dependencies:
 Bot setup (Rename config.example.json and edit the default values):
 * `token` - Discord bot token
 * `prefix` - Discord bot prefix
+* `activity_type` - Activity type for bot status (must be one of `playing, streaming, listening, watching`)
+* `activity_name` - Text for bot status
+* `disable_help` - If 'true', the default help command will be disabled
 * `notification_channel` - Channel ID where down/up notifications will be sent
 * `role_to_mention` - Role ID which will be tagged in down/up notifications
 * `secs_between_ping` - How many seconds between each uptime check
