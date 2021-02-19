@@ -7,4 +7,4 @@ idna==2.10
 multidict==4.7.6
 ping3==2.6.6
 typing-extensions==3.7.4.3
-yarl==1.6.0
+yarl==1.6.3
