@@ -31,4 +31,5 @@ exclude = '''
     arguments-differ,
     no-member,
     duplicate-code,
+    attribute-defined-outside-init,
     '''

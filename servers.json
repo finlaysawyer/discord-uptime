@@ -12,7 +12,7 @@
     {
       "name": "Invalid ping",
       "type": "ping",
-      "address": "idont.exist"
+      "address": "10.10.10.10"
     },
     {
       "name": "Invalid http",

@@ -20,9 +20,11 @@ class Ping(commands.Cog):
         :param pings: Number of pings
         :return: Delay in milliseconds or error
         """
-        if ping(address) is False:
+        timeout = get_config("timeout")
+
+        if ping(address, timeout=timeout) is False:
             await ctx.send(f"Could not ping {address} - unknown host.")
-        elif ping(address) is None:
+        elif ping(address, timeout=timeout) is None:
             await ctx.send(f"Could not ping {address} - timed out.")
         else:
             for _ in range(pings):
@@ -43,7 +45,7 @@ class Ping(commands.Cog):
         if not address.startswith("http"):
             address = f"http://{address}"
 
-        timeout = get_config("http_timeout")
+        timeout = get_config("timeout")
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=timeout)

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2021-03-20
+
+### Added
+- Option to hide IP addresses in commands and notifications (`hide_ips`) (#23).
+
+### Changed
+- `http_timeout` has been renamed to `timeout` and now also applies to ping requests.
+- Up and down notifications will now use the server name in the Embed title instead of the address.
+
+### Fixed
+- `activity_name` now reads from the config correctly.
+- `disable_help` now reads a boolean instead of a string.
+
 ## [1.1.0] - 2021-02-19
 
 ### Added
@@ -38,3 +51,4 @@
 [1.0.0]: https://github.com/finlaysawyer/discord-uptime/compare/v0.0.1...v1.0.0
 [1.0.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.0...v1.0.1
 [1.1.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.1.0
+[1.2.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.1.1...v1.2.0

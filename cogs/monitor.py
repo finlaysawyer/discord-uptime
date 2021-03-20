@@ -6,7 +6,8 @@ import discord
 from discord.ext import tasks, commands
 from ping3 import ping
 
-from utils.config import get_config, get_servers
+from utils import embeds
+from utils.config import get_config, get_servers, get_server_name
 
 
 class Monitor(commands.Cog):
@@ -29,8 +30,9 @@ class Monitor(commands.Cog):
         """
         if server["address"] not in self.currently_down:
             self.currently_down.update({server["address"]: 0})
-            embed = discord.Embed(
-                title=f"**:red_circle:  {server['address']} is down!**", color=16711680
+            embed = embeds.Embed(
+                title=f"**:red_circle: {get_server_name(server['address'])} is down!**",
+                color=16711680,
             )
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
@@ -49,8 +51,9 @@ class Monitor(commands.Cog):
         :param channel: Channel to send the notification to
         """
         if server["address"] in self.currently_down:
-            embed = discord.Embed(
-                title=f"**:green_circle:  {server['name']} is up!**", color=65287
+            embed = embeds.Embed(
+                title=f"**:green_circle: {get_server_name(server['address'])} is up!**",
+                color=65287,
             )
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
@@ -69,18 +72,18 @@ class Monitor(commands.Cog):
         await self.bot.wait_until_ready()
 
         channel = self.bot.get_channel(get_config("notification_channel"))
+        timeout = get_config("timeout")
 
         for i in get_servers():
             if i["type"] == "ping":
-                if ping(i["address"]) is False:
+                if ping(i["address"], timeout=timeout) is False:
                     await self.notify_down(i, channel, "Host unknown")
-                elif ping(i["address"]) is None:
+                elif ping(i["address"], timeout=timeout) is None:
                     await self.notify_down(i, channel, "Timed out")
                 else:
                     await self.notify_up(i, channel)
             else:
                 address = i["address"]
-                timeout = get_config("http_timeout")
 
                 if not address.startswith("http"):
                     address = f"http://{address}"
@@ -102,7 +105,7 @@ class Monitor(commands.Cog):
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
         """Returns an embed showing the status of each monitored server"""
-        embed = discord.Embed(
+        embed = embeds.Embed(
             title="**Monitor Status**", color=16711680 if self.currently_down else 65287
         )
 
