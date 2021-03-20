@@ -53,7 +53,7 @@ Servers should be setup similar to the examples already in `server.json`:
 
 ## Screenshots
 > Status Command
-> 
+
 ![status](https://i.gyazo.com/6d5e0c4fbdb5ff52619d86eef827e369.png)
 
 > Uptime & Downtime Notifications
