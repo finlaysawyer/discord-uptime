@@ -3,9 +3,10 @@
   "prefix": ">",
   "activity_type": "watching",
   "activity_name": "services",
-  "disable_help": "false",
+  "disable_help": false,
+  "hide_ips": true,
   "notification_channel": 1234,
   "role_to_mention": 1234,
   "secs_between_ping": 30,
-  "http_timeout": 5
+  "timeout": 5
 }
