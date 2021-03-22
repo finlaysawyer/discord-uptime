@@ -2,6 +2,7 @@ import asyncio
 
 import aiohttp
 from discord.ext import commands
+from discord.utils import escape_mentions
 from ping3 import ping
 
 from utils.config import get_config
@@ -21,6 +22,7 @@ class Ping(commands.Cog):
         :return: Delay in milliseconds or error
         """
         timeout = get_config("timeout")
+        address = escape_mentions(address)
 
         if ping(address, timeout=timeout) is False:
             await ctx.send(f"Could not ping {address} - unknown host.")
@@ -46,6 +48,7 @@ class Ping(commands.Cog):
             address = f"http://{address}"
 
         timeout = get_config("timeout")
+        address = escape_mentions(address)
 
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=timeout)
