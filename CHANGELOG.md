@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2021-03-22
+
+### Changed
+- User commands like `ping` will now escape mentions, preventing the bot from using tagging roles.
+
 ## [1.2.0] - 2021-03-20
 
 ### Added
@@ -52,3 +57,4 @@
 [1.0.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.0...v1.0.1
 [1.1.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.1.0
 [1.2.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.1.1...v1.2.0
+[1.2.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.0...v1.2.1
