@@ -1,5 +1,6 @@
 import asyncio
 from datetime import timedelta
+from typing import Optional
 
 import aiohttp
 import discord
@@ -20,7 +21,7 @@ class Monitor(commands.Cog):
         self.monitor_uptime.cancel()
 
     async def notify_down(
-        self, server: object, channel: discord.TextChannel, reason: str
+        self, server: dict, channel: discord.TextChannel, reason: Optional[str]
     ) -> None:
         """
         Sends an embed to indicate a service is offline
@@ -44,7 +45,7 @@ class Monitor(commands.Cog):
                 server["address"], 0
             ) + get_config("secs_between_ping")
 
-    async def notify_up(self, server: object, channel: discord.TextChannel) -> None:
+    async def notify_up(self, server: dict, channel: discord.TextChannel) -> None:
         """
         Sends an embed to indicate a service is online
         :param server: Server object to extract data from
