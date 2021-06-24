@@ -2,8 +2,8 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping and http requests.
-There are also commands avaliable to make manual requests. Built using discord.py 1.6.x, ping3 and aiohttp
+Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping, tcp and http requests.
+There are also commands avaliable to make manual requests. Built using discord.py, ping3 and aiohttp.
 
 ## Installation
 **Requires Python 3.6+**
@@ -28,13 +28,18 @@ No privileged intents are currently needed to run the bot.
 
 ## Servers Configuration
 Servers should be setup similar to the examples already in `server.json`:
-* There are two supported types: `http` and `ping`
+* There are three supported types: `http`, `tcp` and `ping`
 ```json
 [
     {
       "name": "Google",
       "type": "http",
       "address": "google.com"
+    },
+    {
+      "name": "Gmail SMTP",
+      "type": "tcp",
+      "address": "smtp.gmail.com:465",
     },
     {
       "name": "Cloudflare",

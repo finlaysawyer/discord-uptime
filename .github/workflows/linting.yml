@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Python tools
-        run: pip install pylint black bandit
+        run: pip install --upgrade pip setuptools wheel flake8 black bandit
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
