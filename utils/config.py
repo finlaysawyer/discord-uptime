@@ -1,8 +1,8 @@
 import json
-from typing import Iterable, Union
+from typing import Iterable, Optional, Any
 
 
-def load_config_file(file: str) -> json:
+def load_config_file(file: str) -> dict:
     """Attempts to load a json config file"""
     with open(file) as config:
         try:
@@ -30,7 +30,7 @@ def get_server_name(address: str) -> str:
     raise Exception(f"Could not fetch a server name from {address}")
 
 
-def get_config(item: str) -> Union[str, int]:
+def get_config(item: str) -> Optional[Any]:
     """Retrieves the configuration value specified."""
     file = load_config_file("config.json")
 
