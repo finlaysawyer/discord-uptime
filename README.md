@@ -68,3 +68,8 @@ Servers should be setup similar to the examples already in `server.json`:
 > Hide IP addresses
 
 ![hideips](https://i.gyazo.com/8596a75d33aa85716ba86f7e01621bb1.png)
+
+## Contributing
+
+Contributions are very welcome. I use flake8, black, and bandit as linting tools and there is a pre-commit config in the repo
+to help automate this process as much as possible.
