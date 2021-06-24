@@ -36,6 +36,29 @@ class Ping(commands.Cog):
                 )
                 await asyncio.sleep(1)
 
+    @commands.command(brief="Checks a TCP port", usage="tcp <address> <port>")
+    async def tcp(self, ctx, address: str, port: int) -> None:
+        """
+        Checks if a TCP port on a remote host is open for connections
+        :param ctx: commands.Context
+        :param address: Address of host
+        :param port: Port to connect to
+        :return: Delay in milliseconds or error
+        """
+        timeout = get_config("timeout")
+        address = escape_mentions(address)
+
+        conn = asyncio.open_connection(address, port)
+        try:
+            reader, writer = await asyncio.wait_for(conn, timeout)
+            await ctx.send(f"Connection established on {address}:{port}")
+            writer.close()
+            await writer.wait_closed()
+        except asyncio.TimeoutError:
+            await ctx.send(f"Request timed out after {timeout} seconds")
+        except ConnectionRefusedError:
+            await ctx.send(f"Could not establish a connection to {address}:{port}")
+
     @commands.command(brief="Performs a HTTP request", usage="http <address>")
     async def http(self, ctx, address: str) -> None:
         """

@@ -82,6 +82,19 @@ class Monitor(commands.Cog):
                     await self.notify_down(i, channel, "Timed out")
                 else:
                     await self.notify_up(i, channel)
+            elif i["type"] == "tcp":
+                host, port = i["address"].split(":")
+                conn = asyncio.open_connection(host, port)
+                try:
+                    reader, writer = await asyncio.wait_for(conn, timeout)
+                    writer.close()
+                    await writer.wait_closed()
+                except asyncio.TimeoutError:
+                    await self.notify_down(i, channel, "Timed out")
+                except ConnectionRefusedError:
+                    await self.notify_down(i, channel, "Connection failed")
+                else:
+                    await self.notify_up(i, channel)
             else:
                 address = i["address"]
 

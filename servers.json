@@ -10,6 +10,11 @@
       "address": "1.1.1.1"
     },
     {
+      "name": "Gmail SMTP",
+      "type": "tcp",
+      "address": "smtp.gmail.com:465",
+    },
+    {
       "name": "Invalid ping",
       "type": "ping",
       "address": "10.10.10.10"
