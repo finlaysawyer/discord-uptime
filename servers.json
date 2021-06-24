@@ -12,7 +12,7 @@
     {
       "name": "Gmail SMTP",
       "type": "tcp",
-      "address": "smtp.gmail.com:465",
+      "address": "smtp.gmail.com:465"
     },
     {
       "name": "Invalid ping",

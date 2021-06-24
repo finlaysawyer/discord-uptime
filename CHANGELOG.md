@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.0] - 2021-06-24
+
+### Added
+- Support for tcp monitoring (thanks @tferreira!)
+- Added a pre-commit config and flake8
+
+## Changed
+- Added support for building the bot against multiple Python versions in CI
+- Minor documentation & typing tweaks
+
 ## [1.2.1] - 2021-03-22
 
 ### Changed
@@ -58,3 +68,4 @@
 [1.1.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.0.1...v1.1.0
 [1.2.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.1.1...v1.2.0
 [1.2.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.0...v1.2.1
+[1.3.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.1...v1.3.0
