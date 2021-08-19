@@ -14,11 +14,18 @@ from utils.config import get_config, get_servers, get_server_name
 class Monitor(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.retry_count = {}
         self.currently_down = {}
         self.monitor_uptime.start()
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
+
+    def needs_retry(self, server: dict):
+        retry_count = self.retry_count.get(server["address"], 0)
+        if retry_count < get_config("retries"):
+            self.retry_count[server["address"]] = retry_count + 1
+            return True
 
     async def notify_down(
         self, server: dict, channel: discord.TextChannel, reason: Optional[str]
@@ -29,6 +36,9 @@ class Monitor(commands.Cog):
         :param channel: Channel to send the notification to
         :param reason: Reason why the service is down
         """
+        if self.needs_retry(server):
+            return
+
         if server["address"] not in self.currently_down:
             self.currently_down.update({server["address"]: 0})
             embed = embeds.Embed(
@@ -66,6 +76,7 @@ class Monitor(commands.Cog):
             await channel.send(embed=embed)
             await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
             self.currently_down.pop(server["address"])
+            self.retry_count.pop(server["address"])
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
     async def monitor_uptime(self) -> None:
