@@ -16,6 +16,7 @@ class Monitor(commands.Cog):
         self.bot = bot
         self.currently_down = {}
         self.monitor_uptime.start()
+        self.already_mentioned = false
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
@@ -39,7 +40,11 @@ class Monitor(commands.Cog):
             embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
             await channel.send(embed=embed)
-            await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+            
+            """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
+            if self.already_mentioned is False:
+                self.already_mentioned = true
+                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
         else:
             self.currently_down[server["address"]] = self.currently_down.get(
                 server["address"], 0
@@ -64,7 +69,10 @@ class Monitor(commands.Cog):
                 inline=False,
             )
             await channel.send(embed=embed)
-            await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+            """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
+            if self.already_mentioned is False:
+                self.already_mentioned = true
+                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
             self.currently_down.pop(server["address"])
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
@@ -74,6 +82,9 @@ class Monitor(commands.Cog):
 
         channel = self.bot.get_channel(get_config("notification_channel"))
         timeout = get_config("timeout")
+        
+        """Reset the already mentioned field so that a new mention can be sent if there is any update"""
+        self.already_mentioned = false
 
         for i in get_servers():
             if i["type"] == "ping":
