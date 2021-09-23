@@ -41,7 +41,6 @@ class Monitor(commands.Cog):
             embed.add_field(name="Reason", value=reason, inline=False)
             await channel.send(embed=embed)
             
-            """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
             if self.already_mentioned is False:
                 self.already_mentioned = True
                 await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
@@ -69,10 +68,11 @@ class Monitor(commands.Cog):
                 inline=False,
             )
             await channel.send(embed=embed)
-            """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
+            
             if self.already_mentioned is False:
                 self.already_mentioned = True
                 await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+
             self.currently_down.pop(server["address"])
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
@@ -82,8 +82,7 @@ class Monitor(commands.Cog):
 
         channel = self.bot.get_channel(get_config("notification_channel"))
         timeout = get_config("timeout")
-        
-        """Reset the already mentioned field so that a new mention can be sent if there is any update"""
+
         self.already_mentioned = False
 
         for i in get_servers():
