@@ -16,7 +16,7 @@ class Monitor(commands.Cog):
         self.bot = bot
         self.currently_down = {}
         self.monitor_uptime.start()
-        self.already_mentioned = False
+        self.need_to_mention = False
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
@@ -41,9 +41,8 @@ class Monitor(commands.Cog):
             embed.add_field(name="Reason", value=reason, inline=False)
             await channel.send(embed=embed)
             
-            if self.already_mentioned is False:
-                self.already_mentioned = True
-                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+            if self.need_to_mention is False:
+                self.need_to_mention = True
         else:
             self.currently_down[server["address"]] = self.currently_down.get(
                 server["address"], 0
@@ -69,9 +68,8 @@ class Monitor(commands.Cog):
             )
             await channel.send(embed=embed)
             
-            if self.already_mentioned is False:
-                self.already_mentioned = True
-                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+            if self.need_to_mention is False:
+                self.need_to_mention = True
 
             self.currently_down.pop(server["address"])
 
@@ -83,7 +81,7 @@ class Monitor(commands.Cog):
         channel = self.bot.get_channel(get_config("notification_channel"))
         timeout = get_config("timeout")
 
-        self.already_mentioned = False
+        self.need_to_mention = False
 
         for i in get_servers():
             if i["type"] == "ping":
@@ -125,6 +123,9 @@ class Monitor(commands.Cog):
                         await self.notify_down(i, channel, "Timed out")
                     except aiohttp.ClientError:
                         await self.notify_down(i, channel, "Connection failed")
+
+        if self.need_to_mention is True:
+            await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
