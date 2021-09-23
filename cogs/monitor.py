@@ -16,7 +16,7 @@ class Monitor(commands.Cog):
         self.bot = bot
         self.currently_down = {}
         self.monitor_uptime.start()
-        self.already_mentioned = false
+        self.already_mentioned = False
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
@@ -43,7 +43,7 @@ class Monitor(commands.Cog):
             
             """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
             if self.already_mentioned is False:
-                self.already_mentioned = true
+                self.already_mentioned = True
                 await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
         else:
             self.currently_down[server["address"]] = self.currently_down.get(
@@ -71,7 +71,7 @@ class Monitor(commands.Cog):
             await channel.send(embed=embed)
             """Check if the role to mentioned has already been mentioned in this instance, if not mention it and change the bool"""
             if self.already_mentioned is False:
-                self.already_mentioned = true
+                self.already_mentioned = True
                 await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
             self.currently_down.pop(server["address"])
 
@@ -84,7 +84,7 @@ class Monitor(commands.Cog):
         timeout = get_config("timeout")
         
         """Reset the already mentioned field so that a new mention can be sent if there is any update"""
-        self.already_mentioned = false
+        self.already_mentioned = False
 
         for i in get_servers():
             if i["type"] == "ping":
