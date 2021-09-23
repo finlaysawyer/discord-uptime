@@ -17,6 +17,7 @@ class Monitor(commands.Cog):
         self.currently_down = {}
         self.monitor_uptime.start()
         self.need_to_mention = False
+        self.currently_checking = False
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
@@ -39,7 +40,8 @@ class Monitor(commands.Cog):
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
-            await channel.send(embed=embed)
+            if channel is not None:
+                await channel.send(embed=embed)
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -66,7 +68,8 @@ class Monitor(commands.Cog):
                 value=str(timedelta(seconds=self.currently_down[server["address"]])),
                 inline=False,
             )
-            await channel.send(embed=embed)
+            if channel is not None:
+                await channel.send(embed=embed)
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -81,9 +84,12 @@ class Monitor(commands.Cog):
         channel = self.bot.get_channel(get_config("notification_channel"))
         timeout = get_config("timeout")
 
+        """Make sure the need to mention is set to false everytime this function is ran"""
         self.need_to_mention = False
 
         for i in get_servers():
+            self.currently_checking = True
+            
             if i["type"] == "ping":
                 if ping(i["address"], timeout=timeout) is False:
                     await self.notify_down(i, channel, "Host unknown")
@@ -124,11 +130,17 @@ class Monitor(commands.Cog):
                     except aiohttp.ClientError:
                         await self.notify_down(i, channel, "Connection failed")
 
-        if self.need_to_mention is True:
+        self.currently_checking = False
+
+        if self.need_to_mention is True and channel is not None:
             await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
+        """Make this function asleep if the monitor is currently checking"""
+        while self.currently_checking:
+            await asyncio.sleep(0.1)
+
         """Returns an embed showing the status of each monitored server"""
         embed = embeds.Embed(
             title="**Monitor Status**", color=16711680 if self.currently_down else 65287
