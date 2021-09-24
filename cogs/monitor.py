@@ -40,8 +40,10 @@ class Monitor(commands.Cog):
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
-            if channel is not None:
+            try:
                 await channel.send(embed=embed)
+            except Exception:
+                print("Down notification could not be sent, please check your channel permission or your config")
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -68,8 +70,10 @@ class Monitor(commands.Cog):
                 value=str(timedelta(seconds=self.currently_down[server["address"]])),
                 inline=False,
             )
-            if channel is not None:
+            try:
                 await channel.send(embed=embed)
+            except Exception:
+                print("Up notification could not be sent, please check your channel permission or your config")
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -132,8 +136,11 @@ class Monitor(commands.Cog):
 
         self.currently_checking = False
 
-        if self.need_to_mention is True and channel is not None:
-            await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+        if self.need_to_mention is True:
+            try:
+                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+            except Exception:
+                print("Mention could not be sent, please check your channel permission or your config")
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
