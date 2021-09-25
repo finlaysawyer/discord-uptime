@@ -50,18 +50,24 @@ class Monitor(commands.Cog):
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
-            
+
             try:
                 await channel.send(embed=embed)
             except discord.Forbidden:
-                """Does not have permission to send or read the channel"""
-                print("Down notification could not be sent, please make sure the bot has permission to sent message to the specified channel")
+                # Does not have permission to send or read the channel
+                print(
+                    "Down notification could not be sent, please make sure the bot has "
+                    "permission to sent message to the specified channel"
+                )
             except AttributeError:
-                """Specified channel could not be found"""
-                print("Down notification could not be sent, the specified notification channel could not be found.")
+                # Specified channel could not be found
+                print(
+                    "Down notification could not be sent, the specified notification "
+                    "channel could not be found."
+                )
             except Exception as e:
                 print(e)
-            
+
             if self.need_to_mention is False:
                 self.need_to_mention = True
         else:
@@ -91,14 +97,20 @@ class Monitor(commands.Cog):
             try:
                 await channel.send(embed=embed)
             except discord.Forbidden:
-                """Does not have permission to send or read the channel"""
-                print("Up notification could not be sent, please make sure the bot has permission to sent message to the specified channel")
+                # Does not have permission to send or read the channel
+                print(
+                    "Up notification could not be sent, please make sure the bot has "
+                    "permission to sent message to the specified channel"
+                )
             except AttributeError:
-                """Specified channel could not be found"""
-                print("Up notification could not be sent, the specified notification channel could not be found.")
+                # Specified channel could not be found
+                print(
+                    "Up notification could not be sent, the specified notification "
+                    "channel could not be found."
+                )
             except Exception as e:
                 print(e)
-            
+
             if self.need_to_mention is False:
                 self.need_to_mention = True
 
@@ -113,12 +125,12 @@ class Monitor(commands.Cog):
         channel = self.bot.get_channel(get_config("notification_channel"))
         timeout = get_config("timeout")
 
-        """Make sure the need to mention is set to false everytime this function is ran"""
+        # Make sure the need to mention is set to false everytime this function is ran
         self.need_to_mention = False
 
         for i in get_servers():
             self.currently_checking = True
-            
+
             if i["type"] == "ping":
                 if ping(i["address"], timeout=timeout) is False:
                     await self.notify_down(i, channel, "Host unknown")
@@ -163,13 +175,21 @@ class Monitor(commands.Cog):
 
         if self.need_to_mention is True:
             try:
-                await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
+                await channel.send(
+                    f"<@&{get_config('role_to_mention')}>", delete_after=3
+                )
             except discord.Forbidden:
-                """Does not have permission to send or read the channel"""
-                print("Mention could not be sent, please make sure the bot has permission to sent message to the specified channel")
+                # Does not have permission to send or read the channel
+                print(
+                    "Mention could not be sent, please make sure the bot has "
+                    "permission to sent message to the specified channel"
+                )
             except AttributeError:
-                """Specified channel could not be found"""
-                print("Mention could not be sent, the specified notification channel could not be found.")
+                # Specified channel could not be found
+                print(
+                    "Mention could not be sent, the specified notification channel "
+                    "could not be found."
+                )
             except Exception as e:
                 print(e)
 
