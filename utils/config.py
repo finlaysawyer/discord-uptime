@@ -8,7 +8,7 @@ def load_config_file(file: str) -> dict:
         try:
             return json.load(config)
         except json.decoder.JSONDecodeError as err:
-            raise Exception(
+            raise KeyError(
                 f"Couldn't load {config}: it is formatted incorrectly "
                 f"on line {err.lineno} column {err.colno}"
             ) from err
@@ -27,7 +27,7 @@ def get_server_name(address: str) -> str:
         if server["address"] == address:
             return server["name"]
 
-    raise Exception(f"Could not fetch a server name from {address}")
+    raise KeyError(f"Could not fetch a server name from {address}")
 
 
 def get_config(item: str) -> Optional[Any]:
@@ -37,5 +37,5 @@ def get_config(item: str) -> Optional[Any]:
     value = file.get(item)
 
     if value is None:
-        raise Exception(f"Your config is out of date! Missing a value for {item}")
+        raise KeyError(f"Your config is out of date! Missing a value for {item}")
     return value
