@@ -1,12 +1,21 @@
 # Changelog
 
+## [1.4.0] - 2021-09-25
+
+### Added
+- **[BREAKING]** Support for retrying status checks before sending an alert (thanks @tferreira!)
+
+### Changed
+- If multiple servers are down, the notification role will now only be mentioned once (thanks @ColdUnwanted!)
+- `KeyError` will now be raised for config related errors
+
 ## [1.3.0] - 2021-06-24
 
 ### Added
 - Support for tcp monitoring (thanks @tferreira!)
 - Added a pre-commit config and flake8
 
-## Changed
+### Changed
 - Added support for building the bot against multiple Python versions in CI
 - Minor documentation & typing tweaks
 
@@ -69,3 +78,4 @@
 [1.2.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.1.1...v1.2.0
 [1.2.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.0...v1.2.1
 [1.3.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.1...v1.3.0
+[1.4.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.3.0...v1.4.0
