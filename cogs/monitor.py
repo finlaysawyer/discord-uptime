@@ -40,10 +40,17 @@ class Monitor(commands.Cog):
             embed.add_field(name="Address", value=server["address"], inline=False)
             embed.add_field(name="Type", value=server["type"], inline=False)
             embed.add_field(name="Reason", value=reason, inline=False)
+            
             try:
                 await channel.send(embed=embed)
-            except Exception:
-                print("Down notification could not be sent, please check your channel permission or your config")
+            except discord.Forbidden:
+                """Does not have permission to send or read the channel"""
+                print("Down notification could not be sent, please make sure the bot has permission to sent message to the specified channel")
+            except AttributeError:
+                """Specified channel could not be found"""
+                print("Down notification could not be sent, the specified notification channel could not be found.")
+            except Exception as e:
+                print(e)
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -70,10 +77,17 @@ class Monitor(commands.Cog):
                 value=str(timedelta(seconds=self.currently_down[server["address"]])),
                 inline=False,
             )
+
             try:
                 await channel.send(embed=embed)
-            except Exception:
-                print("Up notification could not be sent, please check your channel permission or your config")
+            except discord.Forbidden:
+                """Does not have permission to send or read the channel"""
+                print("Up notification could not be sent, please make sure the bot has permission to sent message to the specified channel")
+            except AttributeError:
+                """Specified channel could not be found"""
+                print("Up notification could not be sent, the specified notification channel could not be found.")
+            except Exception as e:
+                print(e)
             
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -139,8 +153,14 @@ class Monitor(commands.Cog):
         if self.need_to_mention is True:
             try:
                 await channel.send(f"<@&{get_config('role_to_mention')}>", delete_after=3)
-            except Exception:
-                print("Mention could not be sent, please check your channel permission or your config")
+            except discord.Forbidden:
+                """Does not have permission to send or read the channel"""
+                print("Mention could not be sent, please make sure the bot has permission to sent message to the specified channel")
+            except AttributeError:
+                """Specified channel could not be found"""
+                print("Mention could not be sent, the specified notification channel could not be found.")
+            except Exception as e:
+                print(e)
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
     async def status(self, ctx) -> None:
