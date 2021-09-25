@@ -20,6 +20,7 @@ Bot setup (Rename config.example.json and edit the default values):
 * `disable_help` - If true, the default help command will be disabled
 * `hide_ips` - If true, any IP addresses in notifications or the status command will be hidden
 * `notification_channel` - Channel ID where down/up notifications will be sent
+* `retries` - How many retries to complete before flagging a server with down status
 * `role_to_mention` - Role ID which will be tagged in down/up notifications
 * `secs_between_ping` - How many seconds between each uptime check
 * `timeout` - How many seconds before a ping or HTTP request should timeout
