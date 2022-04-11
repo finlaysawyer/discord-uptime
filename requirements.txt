@@ -1,2 +1,2 @@
 discord.py==1.7.3
-ping3==3.0.2
+ping3==4.0.2
