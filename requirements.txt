@@ -1,2 +1,2 @@
-discord.py==1.7.3
+discord.py==2.0.0
 ping3==3.0.2
