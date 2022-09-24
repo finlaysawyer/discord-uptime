@@ -1,38 +1,42 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 from datetime import timedelta
-from typing import Optional
 
 import aiohttp
+import aioping
 import discord
-from discord.ext import tasks, commands
-from ping3 import ping
+from discord.ext import commands, tasks
 
 from utils import embeds
-from utils.config import get_config, get_servers, get_server_name
+from utils.config import get_config, get_server_name, get_servers
+
+logger = logging.getLogger(__name__)
 
 
 class Monitor(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.retry_count = {}
-        self.currently_down = {}
+        self.retry_count: dict[str, int] = {}
+        self.currently_down: dict[str, int] = {}
         self.monitor_uptime.start()
         self.need_to_mention = False
         self.currently_checking = False
-        logging.info("Monitor initialized")
+        logger.info("Monitor initialized")
 
-    def cog_unload(self):
+    async def cog_unload(self) -> None:
         self.monitor_uptime.cancel()
 
-    def needs_retry(self, server: dict):
+    def needs_retry(self, server: dict) -> bool:
         retry_count = self.retry_count.get(server["address"], 0)
         if retry_count < get_config("retries"):
             self.retry_count[server["address"]] = retry_count + 1
             return True
+        return False
 
     async def notify_down(
-        self, server: dict, channel: discord.TextChannel, reason: Optional[str]
+        self, server: dict, channel: discord.TextChannel, reason: str | None
     ) -> None:
         """
         Sends an embed to indicate a service is offline
@@ -44,7 +48,7 @@ class Monitor(commands.Cog):
             return
 
         if server["address"] not in self.currently_down:
-            logging.info(f'Server {server["address"]} went down')
+            logger.info(f'Server {server["address"]} went down')
 
             self.currently_down.update({server["address"]: 0})
             embed = embeds.Embed(
@@ -58,19 +62,12 @@ class Monitor(commands.Cog):
             try:
                 await channel.send(embed=embed)
             except discord.Forbidden:
-                # Does not have permission to send or read the channel
-                print(
-                    "Down notification could not be sent, please make sure the bot has "
-                    "permission to sent message to the specified channel"
-                )
-            except AttributeError:
-                # Specified channel could not be found
-                print(
-                    "Down notification could not be sent, the specified notification "
-                    "channel could not be found."
+                logger.error(
+                    "Down notification could not be sent. "
+                    "Ensure the bot has permission to sent messages to the specified channel."
                 )
             except Exception as e:
-                print(e)
+                logger.exception(e)
 
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -86,6 +83,8 @@ class Monitor(commands.Cog):
         :param channel: Channel to send the notification to
         """
         if server["address"] in self.currently_down:
+            logger.info(f'Server {server["address"]} is back online')
+
             embed = embeds.Embed(
                 title=f"**:green_circle: {get_server_name(server['address'])} is up!**",
                 color=65287,
@@ -101,19 +100,12 @@ class Monitor(commands.Cog):
             try:
                 await channel.send(embed=embed)
             except discord.Forbidden:
-                # Does not have permission to send or read the channel
-                print(
-                    "Up notification could not be sent, please make sure the bot has "
-                    "permission to sent message to the specified channel"
-                )
-            except AttributeError:
-                # Specified channel could not be found
-                print(
-                    "Up notification could not be sent, the specified notification "
-                    "channel could not be found."
+                logger.error(
+                    "Up notification could not be sent. "
+                    "Ensure the bot has permission to sent messages to the specified channel."
                 )
             except Exception as e:
-                print(e)
+                logger.exception(e)
 
             if self.need_to_mention is False:
                 self.need_to_mention = True
@@ -123,15 +115,22 @@ class Monitor(commands.Cog):
                 if self.retry_count is not {}:
                     self.retry_count.pop(server["address"])
             except Exception as e:
-                print(e)
-                print(f"self.retry_count={self.retry_count}")
+                logger.exception(e)
+                logger.debug(f"self.retry_count={self.retry_count}")
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
     async def monitor_uptime(self) -> None:
         """Checks the status of each server and sends up/down notifications"""
         await self.bot.wait_until_ready()
 
-        channel = self.bot.get_channel(get_config("notification_channel"))
+        channel: discord.TextChannel | None = self.bot.get_channel(get_config("notification_channel"))  # type: ignore
+
+        if not channel:
+            logger.debug(
+                "Skipping scheduled monitoring job, invalid `notification_channel` configured..."
+            )
+            return
+
         timeout = get_config("timeout")
 
         # Make sure the need to mention is set to false everytime this function is ran
@@ -141,10 +140,10 @@ class Monitor(commands.Cog):
             self.currently_checking = True
 
             if i["type"] == "ping":
-                if ping(i["address"], timeout=timeout) is False:
-                    await self.notify_down(i, channel, "Host unknown")
-                elif ping(i["address"], timeout=timeout) is None:
-                    await self.notify_down(i, channel, "Timed out")
+                try:
+                    await aioping.ping(i["address"], timeout=timeout)
+                except Exception as err:
+                    await self.notify_down(i, channel, str(err))
                 else:
                     await self.notify_up(i, channel)
             elif i["type"] == "tcp":
@@ -164,7 +163,7 @@ class Monitor(commands.Cog):
                 address = i["address"]
 
                 if not address.startswith("http"):
-                    address = f"http://{address}"
+                    address = f"https://{address}"
 
                 async with aiohttp.ClientSession(
                     timeout=aiohttp.ClientTimeout(total=timeout)
@@ -181,29 +180,21 @@ class Monitor(commands.Cog):
                         await self.notify_down(i, channel, "Connection failed")
 
         self.currently_checking = False
+        role_to_mention = get_config("role_to_mention")
 
-        if self.need_to_mention is True:
+        if self.need_to_mention is True and role_to_mention != 0:
             try:
-                await channel.send(
-                    f"<@&{get_config('role_to_mention')}>", delete_after=3
-                )
+                await channel.send(f"<@&{role_to_mention}>", delete_after=3)
             except discord.Forbidden:
-                # Does not have permission to send or read the channel
-                print(
-                    "Mention could not be sent, please make sure the bot has "
-                    "permission to sent message to the specified channel"
-                )
-            except AttributeError:
-                # Specified channel could not be found
-                print(
-                    "Mention could not be sent, the specified notification channel "
-                    "could not be found."
+                logger.error(
+                    "Mention could not be sent. "
+                    "Ensure the bot has permission to sent messages to the specified channel."
                 )
             except Exception as e:
-                print(e)
+                logger.exception(e)
 
     @commands.command(brief="Checks status of servers being monitored", usage="status")
-    async def status(self, ctx) -> None:
+    async def status(self, ctx: commands.Context) -> None:
         """Make this function asleep if the monitor is currently checking"""
         while self.currently_checking:
             await asyncio.sleep(0.1)
@@ -231,5 +222,5 @@ class Monitor(commands.Cog):
         await ctx.send(embed=embed)
 
 
-async def setup(bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Monitor(bot))

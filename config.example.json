@@ -5,9 +5,9 @@
   "activity_name": "services",
   "disable_help": false,
   "hide_ips": true,
-  "notification_channel": 1234,
+  "notification_channel": 0,
   "retries": 0,
-  "role_to_mention": 1234,
+  "role_to_mention": 0,
   "secs_between_ping": 30,
   "timeout": 5
 }
