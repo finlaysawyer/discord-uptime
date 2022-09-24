@@ -87,5 +87,5 @@ class Ping(commands.Cog):
                 await ctx.send(f"Could not establish a connection to {address}")
 
 
-def setup(bot):
-    bot.add_cog(Ping(bot))
+async def setup(bot):
+    await bot.add_cog(Ping(bot))
