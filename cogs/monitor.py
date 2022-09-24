@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from datetime import timedelta
 from typing import Optional
 
@@ -19,6 +20,7 @@ class Monitor(commands.Cog):
         self.monitor_uptime.start()
         self.need_to_mention = False
         self.currently_checking = False
+        logging.info("Monitor initialized")
 
     def cog_unload(self):
         self.monitor_uptime.cancel()
@@ -42,6 +44,8 @@ class Monitor(commands.Cog):
             return
 
         if server["address"] not in self.currently_down:
+            logging.info(f'Server {server["address"]} went down')
+
             self.currently_down.update({server["address"]: 0})
             embed = embeds.Embed(
                 title=f"**:red_circle: {get_server_name(server['address'])} is down!**",
@@ -115,7 +119,12 @@ class Monitor(commands.Cog):
                 self.need_to_mention = True
 
             self.currently_down.pop(server["address"])
-            self.retry_count.pop(server["address"])
+            try:
+                if self.retry_count is not {}:
+                    self.retry_count.pop(server["address"])
+            except Exception as e:
+                print(e)
+                print(f"self.retry_count={self.retry_count}")
 
     @tasks.loop(seconds=get_config("secs_between_ping"))
     async def monitor_uptime(self) -> None:
@@ -222,5 +231,5 @@ class Monitor(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Monitor(bot))
+async def setup(bot):
+    await bot.add_cog(Monitor(bot))

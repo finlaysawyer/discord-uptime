@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import asyncio
 
 import discord
 from discord.ext import commands
@@ -8,7 +9,10 @@ from discord.ext.commands import DefaultHelpCommand
 
 from utils.config import get_config
 
-bot = commands.Bot(command_prefix=get_config("prefix"))
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix=get_config("prefix"), intents=intents)
 logging.basicConfig(
     format="%(levelname)s | %(asctime)s | %(name)s | %(message)s",
     stream=sys.stdout,
@@ -22,7 +26,7 @@ class DiscordUptime(commands.Bot):
             command_prefix=get_config("prefix"),
             description="Bot to monitor uptime of services",
             reconnect=True,
-            intents=discord.Intents.default(),
+            intents=intents,
             activity=discord.Activity(
                 type=getattr(discord.ActivityType, get_config("activity_type").lower()),
                 name=get_config("activity_name"),
@@ -38,7 +42,7 @@ class DiscordUptime(commands.Bot):
 
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py") and not filename.startswith("__"):
-                self.load_extension(f"cogs.{filename[:-3]}")
+                await self.load_extension(f"cogs.{filename[:-3]}")
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, (commands.BadArgument, commands.MissingRequiredArgument)):
@@ -46,5 +50,9 @@ class DiscordUptime(commands.Bot):
         return
 
 
+async def main():
+    await DiscordUptime().start(get_config("token"))
+
+
 if __name__ == "__main__":
-    DiscordUptime().run(get_config("token"))
+    asyncio.run(main())
