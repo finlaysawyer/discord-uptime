@@ -1,5 +1,5 @@
 import json
-from typing import Iterable, Optional, Any
+from typing import Any, Iterable
 
 
 def load_config_file(file: str) -> dict:
@@ -30,7 +30,7 @@ def get_server_name(address: str) -> str:
     raise KeyError(f"Could not fetch a server name from {address}")
 
 
-def get_config(item: str) -> Optional[Any]:
+def get_config(item: str) -> Any:
     """Retrieves the configuration value specified."""
     file = load_config_file("config.json")
 

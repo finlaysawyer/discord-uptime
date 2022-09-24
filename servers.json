@@ -15,11 +15,6 @@
       "address": "smtp.gmail.com:465"
     },
     {
-      "name": "Invalid ping",
-      "type": "ping",
-      "address": "10.10.10.10"
-    },
-    {
       "name": "Invalid http",
       "type": "http",
       "address": "ialsodont.exist"

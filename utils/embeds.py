@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import ipaddress
+from typing import Any
 
 import discord
 
@@ -7,7 +10,7 @@ from utils.config import get_config
 
 class Embed(discord.Embed):
     @staticmethod
-    def hide_ips(var):
+    def hide_ips(var: str) -> str:
         words = var.split(" ")
 
         for index, word in enumerate(words):
@@ -19,7 +22,7 @@ class Embed(discord.Embed):
 
         return " ".join(words)
 
-    def add_field(self, *, name, value, inline=True):
+    def add_field(self, *, name: Any, value: Any, inline: bool = True) -> Embed:
         """Override the add_field method in the original embed to hide addresses"""
 
         if get_config("hide_ips"):

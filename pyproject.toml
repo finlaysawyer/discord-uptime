@@ -20,3 +20,21 @@ exclude = '''
   | foo.py
 )
 '''
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_unused_ignores = true
+show_error_codes = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = [
+    "aioping"
+]
+ignore_missing_imports = true
