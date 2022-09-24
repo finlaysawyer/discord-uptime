@@ -19,6 +19,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+
 class DiscordUptime(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -48,8 +49,10 @@ class DiscordUptime(commands.Bot):
             return await ctx.send(error)
         return
 
+
 async def main():
     await DiscordUptime().start(get_config("token"))
+
 
 if __name__ == "__main__":
     asyncio.run(main())
