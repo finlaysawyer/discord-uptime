@@ -1,12 +1,11 @@
 # discord-uptime
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping, tcp and http requests.
 There are also commands avaliable to make manual requests. Built using discord.py, ping3 and aiohttp.
 
 ## Installation
-**Requires Python 3.6+**
+**Requires Python 3.8+**
 
 Install dependencies:
 
@@ -72,5 +71,4 @@ Servers should be setup similar to the examples already in `server.json`:
 
 ## Contributing
 
-Contributions are very welcome. I use flake8, black, and bandit as linting tools and there is a pre-commit config in the repo
-to help automate this process as much as possible.
+Contributions are welcome. I use flake8 & black for linting and there is a [pre-commit](https://pre-commit.com/) config in the repo to run these tools against local commits.
