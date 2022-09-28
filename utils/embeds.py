@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import ipaddress
+import re
 from typing import Any
 
 import discord
@@ -11,16 +11,8 @@ from utils.config import get_config
 class Embed(discord.Embed):
     @staticmethod
     def hide_ips(var: str) -> str:
-        words = var.split(" ")
-
-        for index, word in enumerate(words):
-            try:
-                ipaddress.ip_address(word)
-                words[index] = "*hidden*"
-            except ValueError:
-                pass
-
-        return " ".join(words)
+        """Replaces IP addresses and ports in a given string"""
+        return re.sub(r"[0-9]+(?:\.[0-9]+){3}(:[0-9]+)?", "*hidden*", var)
 
     def add_field(self, *, name: Any, value: Any, inline: bool = True) -> Embed:
         """Override the add_field method in the original embed to hide addresses"""
