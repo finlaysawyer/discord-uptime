@@ -26,6 +26,15 @@ Bot setup (Rename config.example.json and edit the default values):
 
 **NOTE: You must enable the [Message Content intent](https://support-dev.discord.com/hc/en-us/articles/4404772028055) in order to run v2.0+**.
 
+## Docker Image
+You can also run the Bot via Docker, simply run:
+
+```bash
+docker run --name discord-uptime -d -v $PWD/config.json:/app/config.json:ro -v $PWD/servers.json:/app/servers.json:ro --restart=on-failure docker.io/alsogamer/discord-uptime:latest
+```
+
+With this configuration you still need to manually create `config.json` and `servers.json` for the Bot to start, please refer to the appropriate instructions if unsure.
+
 ## Servers Configuration
 Servers should be setup similar to the examples already in `server.json`:
 * There are three supported types: `http`, `tcp` and `ping`
