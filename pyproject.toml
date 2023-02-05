@@ -1,9 +1,26 @@
+[tool.ruff]
+target-version = "py38"
+select = [
+    "I", # isort
+    "UP", # pyupgrade
+    "F", # pyflakes
+    "E", # pycodestyle
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "PT", # flake8-pytest-style
+    "N", # pep8-naming
+]
+
+ignore = [
+    "E501" # Let black handle line length
+]
+
 [tool.black]
 line-length = 88
 target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
-
 (
   /(
       \.eggs
@@ -20,9 +37,6 @@ exclude = '''
   | foo.py
 )
 '''
-
-[tool.isort]
-profile = "black"
 
 [tool.mypy]
 disallow_untyped_defs = true
