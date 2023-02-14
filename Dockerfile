@@ -4,7 +4,7 @@ LABEL maintainer alsoGAMER <alsogamer3@gmail.com>
 
 COPY . /app/
 
-RUN python3 -m pip install -r /app/requirements.txt
+RUN python3 -m pip install --no-cache-dir -r /app/requirements.txt
 
 WORKDIR /app
 
