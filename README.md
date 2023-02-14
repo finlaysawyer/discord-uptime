@@ -2,7 +2,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Discord Uptime is a Discord bot that allows you to monitor the uptime of services using ICMP ping, tcp and http requests.
-There are also commands avaliable to make manual requests. Built using discord.py, aioping and aiohttp.
+There are also commands available to make manual requests. Built using discord.py, aioping and aiohttp.
 
 ## Installation
 **Requires Python 3.8+**
@@ -30,9 +30,9 @@ Bot setup (Rename config.example.json and edit the default values):
 You can also run the Bot via Docker, simply run:
 
 ```bash
-docker run --name discord-uptime -d -v $PWD/config.json:/app/config.json:ro -v $PWD/servers.json:/app/servers.json:ro --restart=on-failure docker.io/alsogamer/discord-uptime:latest
+docker run --name discord-uptime -d -v $PWD/config.json:/app/config.json:ro -v $PWD/servers.json:/app/servers.json:ro --restart=on-failure ghcr.io/finlaysawyer/discord-uptime:master
 ```
-
+You can also use a release tag (e.g. `v2.0.0`) instead of `master`.
 With this configuration you still need to manually create `config.json` and `servers.json` for the Bot to start, please refer to the appropriate instructions if unsure.
 
 ## Servers Configuration
