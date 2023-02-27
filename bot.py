@@ -37,12 +37,17 @@ class DiscordUptime(commands.Bot):
             else None,
         )
 
-    async def on_ready(self) -> None:
-        logger.info(f"Logged in as {self.user}")
-
+    async def setup_hook(self):
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py") and not filename.startswith("__"):
                 await self.load_extension(f"cogs.{filename[:-3]}")
+
+        guild = discord.Object(id=1023142294905421834)
+        self.tree.copy_global_to(guild=guild)
+        await self.tree.sync(guild=guild)
+
+    async def on_ready(self) -> None:
+        logger.info(f"Logged in as {self.user}")
 
     async def on_command_error(
         self, ctx: commands.Context, error: commands.CommandError
