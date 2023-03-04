@@ -1,12 +1,14 @@
 import asyncio
 
 import aiohttp
-import aioping
 from discord import Interaction, app_commands
 from discord.ext import commands
 from discord.utils import escape_mentions
+from icmplib import ICMPLibError
 
+from checks.ping import ping
 from utils.config import get_config
+from utils.embeds import CheckType, Status, generate_status_embed
 
 
 class Ping(commands.Cog):
@@ -16,24 +18,56 @@ class Ping(commands.Cog):
     @app_commands.command(description="Pings an address")
     async def ping(self, interaction: Interaction, address: str) -> None:
         """
-        Pings an address once or multiple times
-        :param interaction: Discord Interaction
+        Pings an address via icmplib
+        :param interaction: Discord interaction
         :param address: Address to ping
-        :return: Delay in milliseconds or error
+        :return: Embed message containing status of service
         """
-        timeout = get_config("timeout")
+        await interaction.response.send_message("Pinging...")
         address = escape_mentions(address)
 
         try:
-            ping_request = await aioping.ping(address, timeout=timeout)
-        except Exception as err:
-            await interaction.response.send_message(
-                f"Could not ping {address} - {str(err)}"
-            )
+            ping_request = await ping(address)
+        except ICMPLibError as err:
+            status = Status.DOWN
+            embed_fields = [{"name": "Reason", "value": str(err)}]
         else:
-            await interaction.response.send_message(
-                f"Received response from {address} in: {ping_request}s."
-            )
+            # If no packets could be sent or packet loss was encountered,
+            # consider the service down
+            if ping_request.packet_loss > 0 or ping_request.packets_sent == 0:
+                status = Status.DOWN
+            else:
+                status = Status.UP
+
+            embed_fields = [
+                {
+                    "name": "Packets received",
+                    "value": f"{ping_request.packets_sent} / {ping_request.packets_received}",
+                    "inline": False,
+                },
+                {
+                    "name": "Packet loss",
+                    "value": f"{ping_request.packet_loss:.0%}",
+                    "inline": False,
+                },
+                {
+                    "name": "Round-trip time",
+                    "value": f"Minimum: {ping_request.min_rtt}ms"
+                    f"\nAverage: {ping_request.avg_rtt}ms"
+                    f"\nMaximum: {ping_request.max_rtt}ms",
+                    "inline": False,
+                },
+            ]
+
+        await interaction.edit_original_response(
+            content=None,
+            embed=generate_status_embed(
+                status,
+                CheckType.PING,
+                address,
+                fields=embed_fields,
+            ),
+        )
 
     @app_commands.command(description="Checks a TCP port")
     async def tcp(self, interaction: Interaction, address: str, port: int) -> None:

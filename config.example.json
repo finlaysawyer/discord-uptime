@@ -9,5 +9,5 @@
   "retries": 0,
   "role_to_mention": 0,
   "secs_between_ping": 30,
-  "timeout": 5
+  "timeout": 3
 }

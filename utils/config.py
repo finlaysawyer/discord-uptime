@@ -1,6 +1,9 @@
 import json
 from typing import Any, Iterable
 
+GREEN = 65287
+RED = 16711680
+
 
 def load_config_file(file: str) -> dict:
     """Attempts to load a json config file"""
