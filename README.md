@@ -26,6 +26,10 @@ Bot setup (Rename config.example.json and edit the default values):
 
 **NOTE: You must enable the [Message Content intent](https://support-dev.discord.com/hc/en-us/articles/4404772028055) in order to run v2.0+**.
 
+## Running the bot
+
+The bot can be run via the `bot.py` entrypoint, e.g. `python -m bot`.
+
 ## Docker Image
 You can also run the Bot via Docker, simply run:
 
