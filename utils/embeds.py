@@ -48,7 +48,7 @@ def generate_status_embed(
     status: Status,
     check_type: CheckType,
     request_address: str,
-    fields: list[dict[str, str | bool]] | None = None,
+    fields: list[dict] | None = None,
 ) -> Embed:
     """
     Generates an embed for a request.
@@ -68,7 +68,8 @@ def generate_status_embed(
         colour=colour,
     )
 
-    for field in fields:
-        embed.add_field(**field)
+    if fields:
+        for field in fields:
+            embed.add_field(**field)
 
     return embed

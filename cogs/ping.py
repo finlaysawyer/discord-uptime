@@ -30,7 +30,7 @@ class Ping(commands.Cog):
             ping_request = await ping(address)
         except ICMPLibError as err:
             status = Status.DOWN
-            embed_fields = [{"name": "Reason", "value": str(err)}]
+            embed_fields: list[dict] = [{"name": "Reason", "value": str(err)}]
         else:
             # If no packets could be sent or packet loss was encountered,
             # consider the service down
