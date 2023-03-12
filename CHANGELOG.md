@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.5.0] - 2023-03-12
+
+`v1.5.0` will be the last release in the v1 cycle. v2 is in development and will contain several improvements
+over v1, such as the addition of slash commands, supporting the 'ping' check without root via icmplib, and more. Future
+improvements such as persistent tracking of uptime/downtime in SQLite is also planned, but will likely come
+after the initial v2 release.
+
+### Added
+- `pre-commit-ci` has been configured to autofix PRs that do not pass formatting checks
+- **[BREAKING]** Python 3.7 has been dropped, as upstream Discord.py no longer supports it
+- The message content intent has been added, which is a requirement from Discord to run the bot (thanks @dotneko)
+- A Dockerfile has been added as an alternative way to run the bot (thanks @alsoGAMER)
+- A workflow has been added that automatically pushes new image releases to [GHCR](https://github.com/finlaysawyer/discord-uptime/pkgs/container/discord-uptime)
+
+### Changed
+- Discord.py has been bumped to the latest 2.x version (thanks @dotneko)
+- Modifications for newer async/await syntax (thanks @dotneko)
+- Various typing, logging and spelling tweaks
+- `aioping` is now used instead of `ping3` for the ping check
+
+### Fixed
+- IP addresses are now censored correctly when a port is added at the end
+
 ## [1.4.0] - 2021-09-25
 
 ### Added
@@ -79,3 +102,4 @@
 [1.2.1]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.0...v1.2.1
 [1.3.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.2.1...v1.3.0
 [1.4.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.3.0...v1.4.0
+[1.5.0]: https://github.com/finlaysawyer/discord-uptime/compare/v1.4.0...v1.5.0
