@@ -5,6 +5,7 @@
   "activity_name": "services",
   "disable_help": false,
   "hide_ips": true,
+  "guild_id": 0,
   "notification_channel": 0,
   "retries": 0,
   "role_to_mention": 0,

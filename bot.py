@@ -21,8 +21,8 @@ intents.message_content = True
 
 COGS = (
     "ping",
-    "tcp",
-    "http",
+    # "tcp",
+    # "http",
     # "monitor",
 )
 
@@ -47,7 +47,7 @@ class DiscordUptime(commands.Bot):
         for cog in COGS:
             await self.load_extension(f"cogs.{cog}")
 
-        guild = discord.Object(id=1023142294905421834)
+        guild = discord.Object(id=get_config("guild_id"))
         self.tree.copy_global_to(guild=guild)
         await self.tree.sync(guild=guild)
 
