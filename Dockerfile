@@ -1,6 +1,4 @@
-FROM python:3.8.16-slim-bullseye
-
-LABEL maintainer alsoGAMER <alsogamer3@gmail.com>
+FROM python:3.8.17-slim-bullseye
 
 COPY . /app/
 
