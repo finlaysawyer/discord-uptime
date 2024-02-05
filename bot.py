@@ -32,9 +32,11 @@ class DiscordUptime(commands.Bot):
                 type=getattr(discord.ActivityType, get_config("activity_type").lower()),
                 name=get_config("activity_name"),
             ),
-            help_command=commands.DefaultHelpCommand()
-            if not get_config("disable_help")
-            else None,
+            help_command=(
+                commands.DefaultHelpCommand()
+                if not get_config("disable_help")
+                else None
+            ),
         )
 
     async def on_ready(self) -> None:
