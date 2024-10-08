@@ -112,7 +112,7 @@ class Monitor(commands.Cog):
 
             self.currently_down.pop(server["address"])
             try:
-                if self.retry_count is not {}:
+                if self.retry_count != {}:
                     self.retry_count.pop(server["address"])
             except Exception as e:
                 logger.exception(e)
